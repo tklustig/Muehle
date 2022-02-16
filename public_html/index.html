@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mühle spielen</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="css/style.css">    
+        <style>
+            body{
+                background-position: 10px 10px;
+                background-image: url("img/brett.png");
+                background-repeat: no-repeat; /* Do not repeat the image */
+            }
+        </style>
+        <script src="js/jquery-1.7.1.min.js"></script>
+        <script>
+            //globale Variablen
+            let istAnDerReihe = 0;
+            let arHaveMoved = new Array();
+            let arMuehleWhite = new Array();
+            let arMuehleBlack = new Array();
+            let checkMuehle = false;
+            let steinWurdeEntfernt = false;
+
+            function allowDrop(ev) {
+                ev.preventDefault();
+            }
+
+            function drag(ev) {
+                ev.dataTransfer.setData("id", ev.target.id);
+            }
+
+            function drop(ev) {
+                if (!steinWurdeEntfernt) {
+                    istAnDerReihe++;
+                    ev.preventDefault();
+                    var data = ev.dataTransfer.getData("id");
+                    var divB = ev.target.getAttribute('id');
+                    if (divB.match("drag")) {
+                        alert("Feld wurde bereits belegt. Bitte Anderes wählen!");
+                        istAnDerReihe--;
+                        return;
+                    }
+                    if (moveIsLegal(data))
+                        ev.target.appendChild(document.getElementById(data));
+                    if (muehle(divB)) {
+                        alert("Sie haben eine Mühle! Entfernen Sie einen Stein");
+                        if (steinEntfernen(istAnDerReihe)) {
+                            checkMuehle = false;
+                        }
+                    }
+                } else
+                    alert('Sie hatten eine Mühle. Wollen Sie keinen Stein entfernen?');
+            }
+
+            function Reload() {
+                location.reload();
+            }
+
+            function moveIsLegal(data) {
+                //Initialisierungen       
+                var treffer;
+                const arSteinWeissId = ["drag2", "drag4", "drag6", "drag8", "drag10", "drag12"];
+                const arSteinBlackId = ["drag1", "drag3", "drag5", "drag7", "drag9", "drag11"];
+                //Initialisierungsende
+                if (istAnDerReihe % 2 == 1) {
+                    if (arSteinWeissId.includes(data))
+                        treffer = true;
+                    else
+                        treffer = false;
+                    if (!treffer) {
+                        alert("Falscher Stein. Weiß ist an der Reihe!");
+                        istAnDerReihe--;
+                        return false;
+                    }
+                } else if (istAnDerReihe % 2 == 0) {
+                    if (arSteinBlackId.includes(data))
+                        treffer = true;
+                    else
+                        treffer = false;
+                    if (!treffer) {
+                        alert("Falscher Stein. Schwarz ist an der Reihe!");
+                        istAnDerReihe--;
+                        return false;
+                    }
+                }
+                if (istAnDerReihe <= 12) {
+                    if (!arHaveMoved.includes(data)) {
+                        arHaveMoved.push(data)
+                    } else {
+                        alert("Zug ungültig: Erst alle Steine setzen, dann ziehen!");
+                        istAnDerReihe--;
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function muehle(targetDiv) {
+                const arThreeInaRow_1 = ["div1", "div2", "div3"];
+                if (istAnDerReihe % 2 == 1)
+                    arMuehleWhite.push(targetDiv);
+                else if (istAnDerReihe % 2 == 0)
+                    arMuehleBlack.push(targetDiv);
+                if (arMuehleWhite.length >= 3) {
+                    var isMuehle_1_White = arMuehleWhite.includes(arThreeInaRow_1[0]) && arMuehleWhite.includes(arThreeInaRow_1[1]) && arMuehleWhite.includes(arThreeInaRow_1[2]) ? true : false;
+                }
+                if (arMuehleBlack.length >= 3) {
+                    var isMuehle_1_Black = arMuehleBlack.includes(arThreeInaRow_1[0]) && arMuehleBlack.includes(arThreeInaRow_1[1]) && arMuehleBlack.includes(arThreeInaRow_1[2]) ? true : false;
+                }
+                //ToDo:Anderen Algorithmus zur Vermeidung permanenter Mühleanzeigen implementieren,da arMuehlewhite auch beim Ziehen benötigt wird
+                if (isMuehle_1_White && istAnDerReihe <= 12) {
+                    steinWurdeEntfernt = !steinWurdeEntfernt;
+                    for (var i = 0; i < arMuehleWhite.length; i++) {
+                        delete arMuehleWhite[i];
+                    }
+                    return true;
+                } else if (isMuehle_1_Black && istAnDerReihe <= 12) {
+                    steinWurdeEntfernt = !steinWurdeEntfernt;
+                    for (var i = 0; i < arMuehleBlack.length; i++) {
+                        delete arMuehleBlack[i];
+                    }
+                    return true;
+                }
+                return false;
+
+            }
+
+            function steinEntfernen(farbe) {
+                const arSteinWeissId = ["drag2", "drag4", "drag6", "drag8", "drag10", "drag12"];
+                const arSteinBlackId = ["drag1", "drag3", "drag5", "drag7", "drag9", "drag11"];
+                $("img").click(function () {
+                    if (!checkMuehle) {
+                        var stein = this.getAttribute('id');
+                        if (farbe % 2 == 1 && arSteinBlackId.includes(stein) || farbe % 2 == 0 && arSteinWeissId.includes(stein)) {
+                            $(this).hide();
+                            steinWurdeEntfernt = !steinWurdeEntfernt;
+                            checkMuehle = true;
+                            return true;
+                        } else
+                            alert("Falsche Farbe. Bitte anderen Stein selektieren!");
+                    }
+                });
+                return false;
+            }
+
+        </script>
+    </head>
+    <body>
+        <!-- Eckpunkte des Brettes -->
+        <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div> 
+        <div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div4" ondrop="drop(event)" ondragover="allowDrop(event)"></div> 
+        <div id="div5" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div6" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div7" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div8" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div9" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div10" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div11" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div12" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div13" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div14" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div15" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div16" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div17" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div18" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div19" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div20" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div21" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div22" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div23" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div id="div24" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        <div class="steinWeiss">
+            <img id="drag2" src="img/steinWhite.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+            <img id="drag4" src="img/steinWhite.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+            <img id="drag6" src="img/steinWhite.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+            <img id="drag8" src="img/steinWhite.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+            <img id="drag10" src="img/steinWhite.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+            <img id="drag12" src="img/steinWhite.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+        </div>
+        <div class="steinSchwarz">
+            <img id="drag1" src="img/steinBl.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+            <img id="drag3" src="img/steinBl.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+            <img id="drag5" src="img/steinBl.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+            <img id="drag7" src="img/steinBl.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+            <img id="drag9" src="img/steinBl.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+            <img id="drag11" src="img/steinBl.png" draggable="true" ondragstart="drag(event)" alt="NoImageFound">
+        </div>
+        <!-- geschlagende Steine -->
+        <button id="btnReload" class="btn btn-primary btn-sm" onclick="Reload()">New</button>
+    </body>
+</html>
