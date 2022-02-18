@@ -20,7 +20,10 @@
             let arHaveMoved = new Array();
             let arMuehleWhite = new Array();
             let arMuehleBlack = new Array();
-            let checkMuehle = false;
+            let muehle_pos_1 = true;
+            let muehle_pos_1_dummy = false;
+            let muehle_pos_2 = true;
+            let muehle_pos_2_dummy = false;
             let steinWurdeEntfernt = false;
 
             function allowDrop(ev) {
@@ -42,13 +45,11 @@
                         istAnDerReihe--;
                         return;
                     }
-                    if (moveIsLegal(data))
+                    if (moveIsLegal(data, divB))
                         ev.target.appendChild(document.getElementById(data));
                     if (muehle(divB)) {
                         alert("Sie haben eine Mühle! Entfernen Sie einen Stein");
-                        if (steinEntfernen(istAnDerReihe)) {
-                            checkMuehle = false;
-                        }
+                        steinEntfernen(istAnDerReihe);
                     }
                 } else
                     alert('Sie hatten eine Mühle. Wollen Sie keinen Stein entfernen?');
@@ -58,16 +59,17 @@
                 location.reload();
             }
 
-            function moveIsLegal(data) {
+            function moveIsLegal(data, targetDiv) {
                 //Initialisierungen       
                 var treffer;
                 const arSteinWeissId = ["drag2", "drag4", "drag6", "drag8", "drag10", "drag12"];
                 const arSteinBlackId = ["drag1", "drag3", "drag5", "drag7", "drag9", "drag11"];
                 //Initialisierungsende
                 if (istAnDerReihe % 2 == 1) {
-                    if (arSteinWeissId.includes(data))
+                    if (arSteinWeissId.includes(data)) {
                         treffer = true;
-                    else
+                        arMuehleWhite.push(targetDiv);
+                    } else
                         treffer = false;
                     if (!treffer) {
                         alert("Falscher Stein. Weiß ist an der Reihe!");
@@ -75,9 +77,10 @@
                         return false;
                     }
                 } else if (istAnDerReihe % 2 == 0) {
-                    if (arSteinBlackId.includes(data))
+                    if (arSteinBlackId.includes(data)) {
                         treffer = true;
-                    else
+                        arMuehleBlack.push(targetDiv);
+                    } else
                         treffer = false;
                     if (!treffer) {
                         alert("Falscher Stein. Schwarz ist an der Reihe!");
@@ -98,50 +101,69 @@
             }
 
             function muehle(targetDiv) {
-                const arThreeInaRow_1 = ["div1", "div2", "div3"];
-                if (istAnDerReihe % 2 == 1)
-                    arMuehleWhite.push(targetDiv);
-                else if (istAnDerReihe % 2 == 0)
+                const arThreeInaRow_1 = ['div1', 'div2', 'div3'];
+                const arThreeInaRow_2 = ['div1', 'div10', 'div22'];
+                if (istAnDerReihe % 2 == 0)
                     arMuehleBlack.push(targetDiv);
                 if (arMuehleWhite.length >= 3) {
-                    var isMuehle_1_White = arMuehleWhite.includes(arThreeInaRow_1[0]) && arMuehleWhite.includes(arThreeInaRow_1[1]) && arMuehleWhite.includes(arThreeInaRow_1[2]) ? true : false;
+                    var isMuehle_1_White = arMuehleWhite.includes(arThreeInaRow_1[0]) && arMuehleWhite.includes(arThreeInaRow_1[1]) && arMuehleWhite.includes(arThreeInaRow_1[2]) && muehle_pos_1 ? true : false;
+                    var isMuehle_2_White = arMuehleWhite.includes(arThreeInaRow_2[0]) && arMuehleWhite.includes(arThreeInaRow_2[1]) && arMuehleWhite.includes(arThreeInaRow_2[2]) && muehle_pos_2 ? true : false;
                 }
                 if (arMuehleBlack.length >= 3) {
-                    var isMuehle_1_Black = arMuehleBlack.includes(arThreeInaRow_1[0]) && arMuehleBlack.includes(arThreeInaRow_1[1]) && arMuehleBlack.includes(arThreeInaRow_1[2]) ? true : false;
+                    var isMuehle_1_Black = arMuehleBlack.includes(arThreeInaRow_1[0]) && arMuehleBlack.includes(arThreeInaRow_1[1]) && arMuehleBlack.includes(arThreeInaRow_1[2]) && muehle_pos_1 ? true : false;
+                    var isMuehle_2_Black = arMuehleBlack.includes(arThreeInaRow_2[0]) && arMuehleBlack.includes(arThreeInaRow_2[1]) && arMuehleBlack.includes(arThreeInaRow_2[2]) && muehle_pos_2 ? true : false;
                 }
-                //ToDo:Anderen Algorithmus zur Vermeidung permanenter Mühleanzeigen implementieren,da arMuehlewhite auch beim Ziehen benötigt wird
-                if (isMuehle_1_White && istAnDerReihe <= 12) {
-                    steinWurdeEntfernt = !steinWurdeEntfernt;
-                    for (var i = 0; i < arMuehleWhite.length; i++) {
-                        delete arMuehleWhite[i];
+                if (istAnDerReihe <= 12) {
+                    if (isMuehle_1_White) {
+                        steinWurdeEntfernt = !steinWurdeEntfernt;
+                        muehle_pos_1 = false;
+                        muehle_pos_1_dummy = true;
+                        return true;
+                    } else if (isMuehle_1_Black) {
+                        steinWurdeEntfernt = !steinWurdeEntfernt;
+                        muehle_pos_1 = false;
+                        muehle_pos_1_dummy = true;
+                        return true;
+                    } else if (isMuehle_2_White) {
+                        steinWurdeEntfernt = !steinWurdeEntfernt;
+                        muehle_pos_2 = false;
+                        muehle_pos_2_dummy = true;
+                        return true;
+                    } else if (isMuehle_2_Black) {
+                        steinWurdeEntfernt = !steinWurdeEntfernt;
+                        muehle_pos_2 = false;
+                        muehle_pos_2_dummy = true;
+                        return true;
                     }
-                    return true;
-                } else if (isMuehle_1_Black && istAnDerReihe <= 12) {
-                    steinWurdeEntfernt = !steinWurdeEntfernt;
-                    for (var i = 0; i < arMuehleBlack.length; i++) {
-                        delete arMuehleBlack[i];
-                    }
-                    return true;
+                } else if (istAnDerReihe > 12) {
+
                 }
                 return false;
-
             }
 
             function steinEntfernen(farbe) {
                 const arSteinWeissId = ["drag2", "drag4", "drag6", "drag8", "drag10", "drag12"];
                 const arSteinBlackId = ["drag1", "drag3", "drag5", "drag7", "drag9", "drag11"];
-                $("img").click(function () {
-                    if (!checkMuehle) {
+                if (istAnDerReihe <= 12) {
+                    $("img").click(function () {
                         var stein = this.getAttribute('id');
                         if (farbe % 2 == 1 && arSteinBlackId.includes(stein) || farbe % 2 == 0 && arSteinWeissId.includes(stein)) {
-                            $(this).hide();
-                            steinWurdeEntfernt = !steinWurdeEntfernt;
-                            checkMuehle = true;
+                            if (muehle_pos_1_dummy) {
+                                $(this).hide();
+                                muehle_pos_1_dummy = false;
+                                steinWurdeEntfernt = !steinWurdeEntfernt;
+                            } else if (muehle_pos_2_dummy) {
+                                muehle_pos_2_dummy = false;
+                                $(this).hide();
+                                steinWurdeEntfernt = !steinWurdeEntfernt;
+                            }
                             return true;
                         } else
-                            alert("Falsche Farbe. Bitte anderen Stein selektieren!");
-                    }
-                });
+                            alert("Falsche Wahl. Bitte anderen Stein selektieren!");
+                    });
+                } else if (istAnDerReihe > 12) {
+
+                }
                 return false;
             }
 
