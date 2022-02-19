@@ -167,7 +167,7 @@
                 if (istAnDerReihe <= accessMode.setzen) {
                     $("img").click(function () {
                         var stein = this.getAttribute('id');
-                        if (farbe % 2 == accessMode.schwarzerStein && arSteinBlackId.includes(stein) || farbe % 2 == accessMode.weisserStein && arSteinWeissId.includes(stein)) {
+                        if (farbe % 2 == accessMode.weisserStein && arSteinBlackId.includes(stein) || farbe % 2 == accessMode.schwarzerStein && arSteinWeissId.includes(stein)) {
                             if (muehle_pos_1_dummy) {
                                 $(this).hide();
                                 muehle_pos_1_dummy = false;
@@ -182,12 +182,13 @@
                                 steinWurdeEntfernt = !steinWurdeEntfernt;
                             }
                             //Den geschlagenen Stein mittrels indexOf() aus dem Array arMuehleWhite||arMuehleBlack entfernen, damit keine Mühle angezeigt wird
-                            for (var i = 0; i < arHaveMoved.length; i++) {
-                                if (arHaveMoved[i] == stein) {
-                                    var value2Delete = arHaveMoved[i + 1];
-                                    alert(x);
-                                }
-                            }
+                            var indexHaveMoved = arHaveMoved.indexOf(stein);
+                            var indexMuehleWhite = arMuehleWhite.indexOf(arHaveMoved[indexHaveMoved + 1]);
+                            var indexMuehleBlack = arMuehleBlack.indexOf(arHaveMoved[indexHaveMoved + 1]);
+                            if (indexMuehleWhite != -1)
+                                delete arMuehleWhite[indexMuehleWhite];
+                            else if (indexMuehleBlack != -1)
+                                delete arMuehleBlack[indexMuehleBlack];
                             return true;
                         } /*else
                          alert("Falsche Wahl. Bitte anderen Stein selektieren!");*/
