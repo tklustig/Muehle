@@ -16,6 +16,12 @@
         <script src="js/jquery-1.7.1.min.js"></script>
         <script>
             //globale Variablen
+            const accessMode = Object.freeze({
+                schwarzerStein: 0,
+                weisserStein: 1,
+                setzen: 12,
+                ziehen: 13
+            });
             let istAnDerReihe = 0;
             let arHaveMoved = new Array();
             let arMuehleWhite = new Array();
@@ -24,6 +30,8 @@
             let muehle_pos_1_dummy = false;
             let muehle_pos_2 = true;
             let muehle_pos_2_dummy = false;
+            let muehle_pos_3 = true;
+            let muehle_pos_3_dummy = false;
             let steinWurdeEntfernt = false;
 
             function allowDrop(ev) {
@@ -47,8 +55,8 @@
                     }
                     if (moveIsLegal(data, divB))
                         ev.target.appendChild(document.getElementById(data));
-                    if (muehle(divB)) {
-                        alert("Sie haben eine Mühle! Entfernen Sie einen Stein");
+                    if (muehle()) {
+                        alert("Sie haben eine Mühle! Entfernen Sie einen Stein!");
                         steinEntfernen(istAnDerReihe);
                     }
                 } else
@@ -65,7 +73,7 @@
                 const arSteinWeissId = ["drag2", "drag4", "drag6", "drag8", "drag10", "drag12"];
                 const arSteinBlackId = ["drag1", "drag3", "drag5", "drag7", "drag9", "drag11"];
                 //Initialisierungsende
-                if (istAnDerReihe % 2 == 1) {
+                if (istAnDerReihe % 2 === accessMode.weisserStein) {
                     if (arSteinWeissId.includes(data)) {
                         treffer = true;
                         arMuehleWhite.push(targetDiv);
@@ -76,7 +84,7 @@
                         istAnDerReihe--;
                         return false;
                     }
-                } else if (istAnDerReihe % 2 == 0) {
+                } else if (istAnDerReihe % 2 === accessMode.schwarzerStein) {
                     if (arSteinBlackId.includes(data)) {
                         treffer = true;
                         arMuehleBlack.push(targetDiv);
@@ -88,9 +96,10 @@
                         return false;
                     }
                 }
-                if (istAnDerReihe <= 12) {
+                if (istAnDerReihe <= accessMode.setzen) {
                     if (!arHaveMoved.includes(data)) {
                         arHaveMoved.push(data)
+                        arHaveMoved.push(targetDiv);
                     } else {
                         alert("Zug ungültig: Erst alle Steine setzen, dann ziehen!");
                         istAnDerReihe--;
@@ -100,20 +109,21 @@
                 return true;
             }
 
-            function muehle(targetDiv) {
+            function muehle() {
                 const arThreeInaRow_1 = ['div1', 'div2', 'div3'];
                 const arThreeInaRow_2 = ['div1', 'div10', 'div22'];
-                if (istAnDerReihe % 2 == 0)
-                    arMuehleBlack.push(targetDiv);
+                const arThreeInaRow_3 = ['div22', 'div23', 'div24'];
                 if (arMuehleWhite.length >= 3) {
                     var isMuehle_1_White = arMuehleWhite.includes(arThreeInaRow_1[0]) && arMuehleWhite.includes(arThreeInaRow_1[1]) && arMuehleWhite.includes(arThreeInaRow_1[2]) && muehle_pos_1 ? true : false;
                     var isMuehle_2_White = arMuehleWhite.includes(arThreeInaRow_2[0]) && arMuehleWhite.includes(arThreeInaRow_2[1]) && arMuehleWhite.includes(arThreeInaRow_2[2]) && muehle_pos_2 ? true : false;
+                    var isMuehle_3_White = arMuehleWhite.includes(arThreeInaRow_3[0]) && arMuehleWhite.includes(arThreeInaRow_3[1]) && arMuehleWhite.includes(arThreeInaRow_3[2]) && muehle_pos_3 ? true : false;
                 }
                 if (arMuehleBlack.length >= 3) {
                     var isMuehle_1_Black = arMuehleBlack.includes(arThreeInaRow_1[0]) && arMuehleBlack.includes(arThreeInaRow_1[1]) && arMuehleBlack.includes(arThreeInaRow_1[2]) && muehle_pos_1 ? true : false;
                     var isMuehle_2_Black = arMuehleBlack.includes(arThreeInaRow_2[0]) && arMuehleBlack.includes(arThreeInaRow_2[1]) && arMuehleBlack.includes(arThreeInaRow_2[2]) && muehle_pos_2 ? true : false;
+                    var isMuehle_3_Black = arMuehleBlack.includes(arThreeInaRow_3[0]) && arMuehleBlack.includes(arThreeInaRow_3[1]) && arMuehleBlack.includes(arThreeInaRow_3[2]) && muehle_pos_3 ? true : false;
                 }
-                if (istAnDerReihe <= 12) {
+                if (istAnDerReihe <= accessMode.setzen) {
                     if (isMuehle_1_White) {
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_1 = false;
@@ -134,8 +144,18 @@
                         muehle_pos_2 = false;
                         muehle_pos_2_dummy = true;
                         return true;
+                    } else if (isMuehle_3_White) {
+                        steinWurdeEntfernt = !steinWurdeEntfernt;
+                        muehle_pos_3 = false;
+                        muehle_pos_3_dummy = true;
+                        return true;
+                    } else if (isMuehle_3_Black) {
+                        steinWurdeEntfernt = !steinWurdeEntfernt;
+                        muehle_pos_3 = false;
+                        muehle_pos_3_dummy = true;
+                        return true;
                     }
-                } else if (istAnDerReihe > 12) {
+                } else if (istAnDerReihe >= accessMode.ziehen) {
 
                 }
                 return false;
@@ -144,10 +164,10 @@
             function steinEntfernen(farbe) {
                 const arSteinWeissId = ["drag2", "drag4", "drag6", "drag8", "drag10", "drag12"];
                 const arSteinBlackId = ["drag1", "drag3", "drag5", "drag7", "drag9", "drag11"];
-                if (istAnDerReihe <= 12) {
+                if (istAnDerReihe <= accessMode.setzen) {
                     $("img").click(function () {
                         var stein = this.getAttribute('id');
-                        if (farbe % 2 == 1 && arSteinBlackId.includes(stein) || farbe % 2 == 0 && arSteinWeissId.includes(stein)) {
+                        if (farbe % 2 == accessMode.schwarzerStein && arSteinBlackId.includes(stein) || farbe % 2 == accessMode.weisserStein && arSteinWeissId.includes(stein)) {
                             if (muehle_pos_1_dummy) {
                                 $(this).hide();
                                 muehle_pos_1_dummy = false;
@@ -156,12 +176,23 @@
                                 muehle_pos_2_dummy = false;
                                 $(this).hide();
                                 steinWurdeEntfernt = !steinWurdeEntfernt;
+                            } else if (muehle_pos_3_dummy) {
+                                muehle_pos_3_dummy = false;
+                                $(this).hide();
+                                steinWurdeEntfernt = !steinWurdeEntfernt;
+                            }
+                            //Den geschlagenen Stein mittrels indexOf() aus dem Array arMuehleWhite||arMuehleBlack entfernen, damit keine Mühle angezeigt wird
+                            for (var i = 0; i < arHaveMoved.length; i++) {
+                                if (arHaveMoved[i] == stein) {
+                                    var value2Delete = arHaveMoved[i + 1];
+                                    alert(x);
+                                }
                             }
                             return true;
-                        } else
-                            alert("Falsche Wahl. Bitte anderen Stein selektieren!");
+                        } /*else
+                         alert("Falsche Wahl. Bitte anderen Stein selektieren!");*/
                     });
-                } else if (istAnDerReihe > 12) {
+                } else if (istAnDerReihe >= accessMode.ziehen) {
 
                 }
                 return false;
