@@ -27,6 +27,8 @@
             let arMuehleWhite = new Array(); //enthält alle weißen Dropfelder
             let arMuehleBlack = new Array(); //enthält alle schwarzen Dropfelder
             let arSteinIsPartOfMuehle = new Array();
+            let arFeldIsPartOfMuehle = new Array();
+
             let muehle_pos_1 = true;
             let muehle_pos_1_dummy = false;
             let muehle_pos_2 = true;
@@ -59,6 +61,7 @@
             let muehle_pos_15_dummy = false;
             let muehle_pos_16 = true;
             let muehle_pos_16_dummy = false;
+
             let steinWurdeEntfernt = false;
             function allowDrop(ev) {
                 ev.preventDefault();
@@ -94,7 +97,6 @@
             }
 
             function moveIsLegal(data, targetDiv) {
-                //alert(targetDiv);
                 //Initialisierungen
                 var treffer;
                 const arSteinWeissId = ["drag2", "drag4", "drag6", "drag8", "drag10", "drag12"];
@@ -149,7 +151,10 @@
                 const arThreeInaRow_10 = ['div4', 'div11', 'div19'];//Inneres Quadrat oben(oben nach unten)
                 const arThreeInaRow_11 = ['div19', 'div20', 'div21'];//Inneres Quadrat unten(links nach rechts)
                 const arThreeInaRow_12 = ['div21', 'div14', 'div6'];//Inneres Quadrat rechts(unten nach oben)             
-                const arThreeInaRow_13 = ['div7', 'div8', 'div9'];//Innerstes Quadrat oben(links nach rechts)             
+                const arThreeInaRow_13 = ['div7', 'div8', 'div9'];//Innerstes Quadrat oben(links nach rechts)  
+                const arThreeInaRow_14 = ['div7', 'div12', 'div16'];//Innerstes Quadrat oben(oben nach unten)  
+                const arThreeInaRow_15 = ['div16', 'div17', 'div18'];//Innerstes Quadrat unten(links nach rechts) 
+                const arThreeInaRow_16 = ['div18', 'div13', 'div9'];//Innerstes Quadrat unten(unten nach oben) 
                 if (arMuehleWhite.length >= 3) {
                     var isMuehle_1_White = arMuehleWhite.includes(arThreeInaRow_1[0]) && arMuehleWhite.includes(arThreeInaRow_1[1]) && arMuehleWhite.includes(arThreeInaRow_1[2]) && muehle_pos_1 ? true : false;
                     var isMuehle_2_White = arMuehleWhite.includes(arThreeInaRow_2[0]) && arMuehleWhite.includes(arThreeInaRow_2[1]) && arMuehleWhite.includes(arThreeInaRow_2[2]) && muehle_pos_2 ? true : false;
@@ -164,6 +169,9 @@
                     var isMuehle_11_White = arMuehleWhite.includes(arThreeInaRow_11[0]) && arMuehleWhite.includes(arThreeInaRow_11[1]) && arMuehleWhite.includes(arThreeInaRow_11[2]) && muehle_pos_11 ? true : false;
                     var isMuehle_12_White = arMuehleWhite.includes(arThreeInaRow_12[0]) && arMuehleWhite.includes(arThreeInaRow_12[1]) && arMuehleWhite.includes(arThreeInaRow_12[2]) && muehle_pos_12 ? true : false;
                     var isMuehle_13_White = arMuehleWhite.includes(arThreeInaRow_13[0]) && arMuehleWhite.includes(arThreeInaRow_13[1]) && arMuehleWhite.includes(arThreeInaRow_13[2]) && muehle_pos_13 ? true : false;
+                    var isMuehle_14_White = arMuehleWhite.includes(arThreeInaRow_14[0]) && arMuehleWhite.includes(arThreeInaRow_14[1]) && arMuehleWhite.includes(arThreeInaRow_14[2]) && muehle_pos_14 ? true : false;
+                    var isMuehle_15_White = arMuehleWhite.includes(arThreeInaRow_15[0]) && arMuehleWhite.includes(arThreeInaRow_15[1]) && arMuehleWhite.includes(arThreeInaRow_15[2]) && muehle_pos_15 ? true : false;
+                    var isMuehle_16_White = arMuehleWhite.includes(arThreeInaRow_16[0]) && arMuehleWhite.includes(arThreeInaRow_16[1]) && arMuehleWhite.includes(arThreeInaRow_16[2]) && muehle_pos_16 ? true : false;
                 }
                 if (arMuehleBlack.length >= 3) {
                     var isMuehle_1_Black = arMuehleBlack.includes(arThreeInaRow_1[0]) && arMuehleBlack.includes(arThreeInaRow_1[1]) && arMuehleBlack.includes(arThreeInaRow_1[2]) && muehle_pos_1 ? true : false;
@@ -179,12 +187,17 @@
                     var isMuehle_11_Black = arMuehleBlack.includes(arThreeInaRow_11[0]) && arMuehleBlack.includes(arThreeInaRow_11[1]) && arMuehleBlack.includes(arThreeInaRow_11[2]) && muehle_pos_11 ? true : false;
                     var isMuehle_12_Black = arMuehleBlack.includes(arThreeInaRow_12[0]) && arMuehleBlack.includes(arThreeInaRow_12[1]) && arMuehleBlack.includes(arThreeInaRow_12[2]) && muehle_pos_12 ? true : false;
                     var isMuehle_13_Black = arMuehleBlack.includes(arThreeInaRow_13[0]) && arMuehleBlack.includes(arThreeInaRow_13[1]) && arMuehleBlack.includes(arThreeInaRow_13[2]) && muehle_pos_13 ? true : false;
+                    var isMuehle_14_Black = arMuehleBlack.includes(arThreeInaRow_14[0]) && arMuehleBlack.includes(arThreeInaRow_14[1]) && arMuehleBlack.includes(arThreeInaRow_14[2]) && muehle_pos_14 ? true : false;
+                    var isMuehle_15_Black = arMuehleBlack.includes(arThreeInaRow_15[0]) && arMuehleBlack.includes(arThreeInaRow_15[1]) && arMuehleBlack.includes(arThreeInaRow_15[2]) && muehle_pos_15 ? true : false;
+                    var isMuehle_16_Black = arMuehleBlack.includes(arThreeInaRow_16[0]) && arMuehleBlack.includes(arThreeInaRow_16[1]) && arMuehleBlack.includes(arThreeInaRow_16[2]) && muehle_pos_16 ? true : false;
                 }
                 if (istAnDerReihe <= accessMode.setzen) {
                     if (isMuehle_1_White || isMuehle_1_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_1[0] || arHaveMoved[i] === arThreeInaRow_1[1] || arHaveMoved[i] === arThreeInaRow_1[2])
+                            if (arHaveMoved[i] === arThreeInaRow_1[0] || arHaveMoved[i] === arThreeInaRow_1[1] || arHaveMoved[i] === arThreeInaRow_1[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_1 = false;
@@ -192,8 +205,10 @@
                         return true;
                     } else if (isMuehle_2_White || isMuehle_2_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_2[0] || arHaveMoved[i] === arThreeInaRow_2[1] || arHaveMoved[i] === arThreeInaRow_2[2])
+                            if (arHaveMoved[i] === arThreeInaRow_2[0] || arHaveMoved[i] === arThreeInaRow_2[1] || arHaveMoved[i] === arThreeInaRow_2[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_2 = false;
@@ -201,8 +216,10 @@
                         return true;
                     } else if (isMuehle_3_White || isMuehle_3_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_3[0] || arHaveMoved[i] === arThreeInaRow_3[1] || arHaveMoved[i] === arThreeInaRow_3[2])
+                            if (arHaveMoved[i] === arThreeInaRow_3[0] || arHaveMoved[i] === arThreeInaRow_3[1] || arHaveMoved[i] === arThreeInaRow_3[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_3 = false;
@@ -210,8 +227,10 @@
                         return true;
                     } else if (isMuehle_4_White || isMuehle_4_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_4[0] || arHaveMoved[i] === arThreeInaRow_4[1] || arHaveMoved[i] === arThreeInaRow_4[2])
+                            if (arHaveMoved[i] === arThreeInaRow_4[0] || arHaveMoved[i] === arThreeInaRow_4[1] || arHaveMoved[i] === arThreeInaRow_4[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_4 = false;
@@ -219,8 +238,10 @@
                         return true;
                     } else if (isMuehle_5_White || isMuehle_5_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_5[0] || arHaveMoved[i] === arThreeInaRow_5[1] || arHaveMoved[i] === arThreeInaRow_5[2])
+                            if (arHaveMoved[i] === arThreeInaRow_5[0] || arHaveMoved[i] === arThreeInaRow_5[1] || arHaveMoved[i] === arThreeInaRow_5[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_5 = false;
@@ -228,8 +249,10 @@
                         return true;
                     } else if (isMuehle_6_White || isMuehle_6_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_6[0] || arHaveMoved[i] === arThreeInaRow_6[1] || arHaveMoved[i] === arThreeInaRow_6[2])
+                            if (arHaveMoved[i] === arThreeInaRow_6[0] || arHaveMoved[i] === arThreeInaRow_6[1] || arHaveMoved[i] === arThreeInaRow_6[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_6 = false;
@@ -237,8 +260,10 @@
                         return true;
                     } else if (isMuehle_7_White || isMuehle_7_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_7[0] || arHaveMoved[i] === arThreeInaRow_7[1] || arHaveMoved[i] === arThreeInaRow_7[2])
+                            if (arHaveMoved[i] === arThreeInaRow_7[0] || arHaveMoved[i] === arThreeInaRow_7[1] || arHaveMoved[i] === arThreeInaRow_7[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_7 = false;
@@ -246,8 +271,10 @@
                         return true;
                     } else if (isMuehle_8_White || isMuehle_8_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_8[0] || arHaveMoved[i] === arThreeInaRow_8[1] || arHaveMoved[i] === arThreeInaRow_8[2])
+                            if (arHaveMoved[i] === arThreeInaRow_8[0] || arHaveMoved[i] === arThreeInaRow_8[1] || arHaveMoved[i] === arThreeInaRow_8[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_8 = false;
@@ -255,8 +282,10 @@
                         return true;
                     } else if (isMuehle_9_White || isMuehle_9_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_9[0] || arHaveMoved[i] === arThreeInaRow_9[1] || arHaveMoved[i] === arThreeInaRow_9[2])
+                            if (arHaveMoved[i] === arThreeInaRow_9[0] || arHaveMoved[i] === arThreeInaRow_9[1] || arHaveMoved[i] === arThreeInaRow_9[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_9 = false;
@@ -264,8 +293,10 @@
                         return true;
                     } else if (isMuehle_10_White || isMuehle_10_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_10[0] || arHaveMoved[i] === arThreeInaRow_10[1] || arHaveMoved[i] === arThreeInaRow_10[2])
+                            if (arHaveMoved[i] === arThreeInaRow_10[0] || arHaveMoved[i] === arThreeInaRow_10[1] || arHaveMoved[i] === arThreeInaRow_10[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_10 = false;
@@ -273,8 +304,10 @@
                         return true;
                     } else if (isMuehle_11_White || isMuehle_11_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_11[0] || arHaveMoved[i] === arThreeInaRow_11[1] || arHaveMoved[i] === arThreeInaRow_11[2])
+                            if (arHaveMoved[i] === arThreeInaRow_11[0] || arHaveMoved[i] === arThreeInaRow_11[1] || arHaveMoved[i] === arThreeInaRow_11[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_11 = false;
@@ -282,8 +315,10 @@
                         return true;
                     } else if (isMuehle_12_White || isMuehle_12_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_12[0] || arHaveMoved[i] === arThreeInaRow_12[1] || arHaveMoved[i] === arThreeInaRow_12[2])
+                            if (arHaveMoved[i] === arThreeInaRow_12[0] || arHaveMoved[i] === arThreeInaRow_12[1] || arHaveMoved[i] === arThreeInaRow_12[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_12 = false;
@@ -291,15 +326,54 @@
                         return true;
                     } else if (isMuehle_13_White || isMuehle_13_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
-                            if (arHaveMoved[i] === arThreeInaRow_13[0] || arHaveMoved[i] === arThreeInaRow_13[1] || arHaveMoved[i] === arThreeInaRow_13[2])
+                            if (arHaveMoved[i] === arThreeInaRow_13[0] || arHaveMoved[i] === arThreeInaRow_13[1] || arHaveMoved[i] === arThreeInaRow_13[2]) {
                                 arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
                         }
                         steinWurdeEntfernt = !steinWurdeEntfernt;
                         muehle_pos_13 = false;
                         muehle_pos_13_dummy = true;
                         return true;
+                    } else if (isMuehle_14_White || isMuehle_14_Black) {
+                        for (var i = 0; i < arHaveMoved.length; i++) {
+                            if (arHaveMoved[i] === arThreeInaRow_14[0] || arHaveMoved[i] === arThreeInaRow_14[1] || arHaveMoved[i] === arThreeInaRow_14[2]) {
+                                arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
+                        }
+                        steinWurdeEntfernt = !steinWurdeEntfernt;
+                        muehle_pos_14 = false;
+                        muehle_pos_14_dummy = true;
+                        return true;
+                    } else if (isMuehle_15_White || isMuehle_15_Black) {
+                        for (var i = 0; i < arHaveMoved.length; i++) {
+                            if (arHaveMoved[i] === arThreeInaRow_15[0] || arHaveMoved[i] === arThreeInaRow_15[1] || arHaveMoved[i] === arThreeInaRow_15[2]) {
+                                arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
+                        }
+                        steinWurdeEntfernt = !steinWurdeEntfernt;
+                        muehle_pos_15 = false;
+                        muehle_pos_15_dummy = true;
+                        return true;
+                    } else if (isMuehle_16_White || isMuehle_16_Black) {
+                        for (var i = 0; i < arHaveMoved.length; i++) {
+                            if (arHaveMoved[i] === arThreeInaRow_16[0] || arHaveMoved[i] === arThreeInaRow_16[1] || arHaveMoved[i] === arThreeInaRow_16[2]) {
+                                arSteinIsPartOfMuehle.push(arHaveMoved[i - 1]);
+                                arFeldIsPartOfMuehle.push(arHaveMoved[i]);
+                            }
+                        }
+                        steinWurdeEntfernt = !steinWurdeEntfernt;
+                        muehle_pos_16 = false;
+                        muehle_pos_16_dummy = true;
+                        return true;
                     }
                 } else if (istAnDerReihe >= accessMode.ziehen) {
+                    //vorm Ziehen alle Arrays zurück setzen
+                    arMuehleWhite.splice(0, arMuehleWhite.length);
+                    arMuehleBlack.splice(0, arMuehleBlack.length);
+                    arHaveMoved.splice(0, arHaveMoved.length);
                     alert("Zugmodus aktiviert");
                 }
                 return false;
@@ -309,20 +383,22 @@
                 //ToDo:Dafür Sorge tragen,dass kein Mühle-Stein entfernt wird
                 const arSteinWeissId = ["drag2", "drag4", "drag6", "drag8", "drag10", "drag12"];
                 const arSteinBlackId = ["drag1", "drag3", "drag5", "drag7", "drag9", "drag11"];
-                var goOn;
                 if (istAnDerReihe <= accessMode.setzen) {
                     $("img").click(function () {
                         var stein = this.getAttribute('id');
                         if (istAnDerReihe % 2 == accessMode.weisserStein && arSteinBlackId.includes(stein) || istAnDerReihe % 2 == accessMode.schwarzerStein && arSteinWeissId.includes(stein)) {
-                            for (var i = 0; i < arSteinIsPartOfMuehle.length; i++) {
-                                if (muehle_pos_1_dummy || muehle_pos_2_dummy || muehle_pos_3_dummy || muehle_pos_4_dummy || muehle_pos_5_dummy || muehle_pos_6_dummy || muehle_pos_7_dummy || muehle_pos_8_dummy || muehle_pos_9_dummy || muehle_pos_10_dummy || muehle_pos_11_dummy || muehle_pos_12_dummy || muehle_pos_13_dummy) {
-                                    if (stein == arSteinIsPartOfMuehle[i]) {
+                            if (muehle_pos_1_dummy || muehle_pos_2_dummy || muehle_pos_3_dummy || muehle_pos_4_dummy || muehle_pos_5_dummy ||
+                                    muehle_pos_6_dummy || muehle_pos_7_dummy || muehle_pos_8_dummy || muehle_pos_9_dummy || muehle_pos_10_dummy ||
+                                    muehle_pos_11_dummy || muehle_pos_12_dummy || muehle_pos_13_dummy || muehle_pos_14_dummy || muehle_pos_15_dummy ||
+                                    muehle_pos_16_dummy) {
+                                for (var i = 0; i < arSteinIsPartOfMuehle.length; i++) {
+                                    if (stein === arSteinIsPartOfMuehle[i]) {
                                         alert("Steine, die eine Mühle bilden, dürfen nicht entfernt werden!");
                                         return;
                                     }
                                 }
                             }
-                            if (muehle_pos_1_dummy && goOn) {
+                            if (muehle_pos_1_dummy) {
                                 $(this).hide();
                                 muehle_pos_1_dummy = false;
                                 steinWurdeEntfernt = !steinWurdeEntfernt;
@@ -366,12 +442,24 @@
                                 muehle_pos_11_dummy = false;
                                 $(this).hide();
                                 steinWurdeEntfernt = !steinWurdeEntfernt;
+                            } else if (muehle_pos_12_dummy) {
+                                muehle_pos_12_dummy = false;
+                                $(this).hide();
+                                steinWurdeEntfernt = !steinWurdeEntfernt;
                             } else if (muehle_pos_13_dummy) {
                                 muehle_pos_13_dummy = false;
                                 $(this).hide();
                                 steinWurdeEntfernt = !steinWurdeEntfernt;
-                            } else if (muehle_pos_12_dummy) {
-                                muehle_pos_12_dummy = false;
+                            } else if (muehle_pos_14_dummy) {
+                                muehle_pos_14_dummy = false;
+                                $(this).hide();
+                                steinWurdeEntfernt = !steinWurdeEntfernt;
+                            } else if (muehle_pos_15_dummy) {
+                                muehle_pos_15_dummy = false;
+                                $(this).hide();
+                                steinWurdeEntfernt = !steinWurdeEntfernt;
+                            } else if (muehle_pos_16_dummy) {
+                                muehle_pos_16_dummy = false;
                                 $(this).hide();
                                 steinWurdeEntfernt = !steinWurdeEntfernt;
                             }
