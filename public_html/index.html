@@ -84,7 +84,7 @@
                     }
                     if (moveIsLegal(data, divB))
                         ev.target.appendChild(document.getElementById(data));
-                    if (muehle()) {
+                    if (muehle(data, divB)) {
                         alert("Sie haben eine Mühle! Entfernen Sie einen Stein!");
                         steinEntfernen();
                     }
@@ -105,7 +105,8 @@
                 if (istAnDerReihe % 2 === accessMode.weisserStein) {
                     if (arSteinWeissId.includes(data)) {
                         treffer = true;
-                        arMuehleWhite.push(targetDiv);
+                        if (istAnDerReihe <= accessMode.setzen)
+                            arMuehleWhite.push(targetDiv);
                     } else
                         treffer = false;
                     if (!treffer) {
@@ -116,7 +117,8 @@
                 } else if (istAnDerReihe % 2 === accessMode.schwarzerStein) {
                     if (arSteinBlackId.includes(data)) {
                         treffer = true;
-                        arMuehleBlack.push(targetDiv);
+                        if (istAnDerReihe <= accessMode.setzen)
+                            arMuehleBlack.push(targetDiv);
                     } else
                         treffer = false;
                     if (!treffer) {
@@ -134,64 +136,71 @@
                         istAnDerReihe--;
                         return false;
                     }
+                } else if (istAnDerReihe >= accessMode.ziehen) {
+                    //vorm Ziehen alle Arrays zurück setzen
+                    if (arMuehleWhite.length > 0) {
+                        arMuehleWhite.splice(0, arMuehleWhite.length);
+                        arMuehleBlack.splice(0, arMuehleBlack.length);
+                        arHaveMoved.splice(0, arHaveMoved.length);
+                    }
                 }
                 return true;
             }
 
-            function muehle() {
-                const arThreeInaRow_1 = ['div1', 'div2', 'div3'];//Äußerstes Quadrat oben(links nach rechts)
-                const arThreeInaRow_2 = ['div1', 'div10', 'div22'];//Äußerstes Quadrat(oben nach unten)
-                const arThreeInaRow_3 = ['div22', 'div23', 'div24'];//Äußerstes Quadrat unten(links nach rechts)
-                const arThreeInaRow_4 = ['div24', 'div15', 'div3'];//Äußerstes Quadrat (unten nach oben)
-                const arThreeInaRow_5 = ['div2', 'div5', 'div8'];//Äußerstes Quadrat mitte(nach unten)
-                const arThreeInaRow_6 = ['div17', 'div20', 'div23'];//Äußerstes Quadrat mitte(nach oben)
-                const arThreeInaRow_7 = ['div10', 'div11', 'div12'];//Äußerstes Quadrat mitte(nach rechts)
-                const arThreeInaRow_8 = ['div13', 'div14', 'div15'];//Äußerstes Quadrat mitte(nach links)
-                const arThreeInaRow_9 = ['div4', 'div5', 'div6'];//Inneres Quadrat oben(links nach rechts)
-                const arThreeInaRow_10 = ['div4', 'div11', 'div19'];//Inneres Quadrat oben(oben nach unten)
-                const arThreeInaRow_11 = ['div19', 'div20', 'div21'];//Inneres Quadrat unten(links nach rechts)
-                const arThreeInaRow_12 = ['div21', 'div14', 'div6'];//Inneres Quadrat rechts(unten nach oben)             
-                const arThreeInaRow_13 = ['div7', 'div8', 'div9'];//Innerstes Quadrat oben(links nach rechts)  
-                const arThreeInaRow_14 = ['div7', 'div12', 'div16'];//Innerstes Quadrat oben(oben nach unten)  
-                const arThreeInaRow_15 = ['div16', 'div17', 'div18'];//Innerstes Quadrat unten(links nach rechts) 
-                const arThreeInaRow_16 = ['div18', 'div13', 'div9'];//Innerstes Quadrat unten(unten nach oben) 
-                if (arMuehleWhite.length >= 3) {
-                    var isMuehle_1_White = arMuehleWhite.includes(arThreeInaRow_1[0]) && arMuehleWhite.includes(arThreeInaRow_1[1]) && arMuehleWhite.includes(arThreeInaRow_1[2]) && muehle_pos_1 ? true : false;
-                    var isMuehle_2_White = arMuehleWhite.includes(arThreeInaRow_2[0]) && arMuehleWhite.includes(arThreeInaRow_2[1]) && arMuehleWhite.includes(arThreeInaRow_2[2]) && muehle_pos_2 ? true : false;
-                    var isMuehle_3_White = arMuehleWhite.includes(arThreeInaRow_3[0]) && arMuehleWhite.includes(arThreeInaRow_3[1]) && arMuehleWhite.includes(arThreeInaRow_3[2]) && muehle_pos_3 ? true : false;
-                    var isMuehle_4_White = arMuehleWhite.includes(arThreeInaRow_4[0]) && arMuehleWhite.includes(arThreeInaRow_4[1]) && arMuehleWhite.includes(arThreeInaRow_4[2]) && muehle_pos_4 ? true : false;
-                    var isMuehle_5_White = arMuehleWhite.includes(arThreeInaRow_5[0]) && arMuehleWhite.includes(arThreeInaRow_5[1]) && arMuehleWhite.includes(arThreeInaRow_5[2]) && muehle_pos_5 ? true : false;
-                    var isMuehle_6_White = arMuehleWhite.includes(arThreeInaRow_6[0]) && arMuehleWhite.includes(arThreeInaRow_6[1]) && arMuehleWhite.includes(arThreeInaRow_6[2]) && muehle_pos_6 ? true : false;
-                    var isMuehle_7_White = arMuehleWhite.includes(arThreeInaRow_7[0]) && arMuehleWhite.includes(arThreeInaRow_7[1]) && arMuehleWhite.includes(arThreeInaRow_7[2]) && muehle_pos_7 ? true : false;
-                    var isMuehle_8_White = arMuehleWhite.includes(arThreeInaRow_8[0]) && arMuehleWhite.includes(arThreeInaRow_8[1]) && arMuehleWhite.includes(arThreeInaRow_8[2]) && muehle_pos_8 ? true : false;
-                    var isMuehle_9_White = arMuehleWhite.includes(arThreeInaRow_9[0]) && arMuehleWhite.includes(arThreeInaRow_9[1]) && arMuehleWhite.includes(arThreeInaRow_9[2]) && muehle_pos_9 ? true : false;
-                    var isMuehle_10_White = arMuehleWhite.includes(arThreeInaRow_10[0]) && arMuehleWhite.includes(arThreeInaRow_10[1]) && arMuehleWhite.includes(arThreeInaRow_10[2]) && muehle_pos_10 ? true : false;
-                    var isMuehle_11_White = arMuehleWhite.includes(arThreeInaRow_11[0]) && arMuehleWhite.includes(arThreeInaRow_11[1]) && arMuehleWhite.includes(arThreeInaRow_11[2]) && muehle_pos_11 ? true : false;
-                    var isMuehle_12_White = arMuehleWhite.includes(arThreeInaRow_12[0]) && arMuehleWhite.includes(arThreeInaRow_12[1]) && arMuehleWhite.includes(arThreeInaRow_12[2]) && muehle_pos_12 ? true : false;
-                    var isMuehle_13_White = arMuehleWhite.includes(arThreeInaRow_13[0]) && arMuehleWhite.includes(arThreeInaRow_13[1]) && arMuehleWhite.includes(arThreeInaRow_13[2]) && muehle_pos_13 ? true : false;
-                    var isMuehle_14_White = arMuehleWhite.includes(arThreeInaRow_14[0]) && arMuehleWhite.includes(arThreeInaRow_14[1]) && arMuehleWhite.includes(arThreeInaRow_14[2]) && muehle_pos_14 ? true : false;
-                    var isMuehle_15_White = arMuehleWhite.includes(arThreeInaRow_15[0]) && arMuehleWhite.includes(arThreeInaRow_15[1]) && arMuehleWhite.includes(arThreeInaRow_15[2]) && muehle_pos_15 ? true : false;
-                    var isMuehle_16_White = arMuehleWhite.includes(arThreeInaRow_16[0]) && arMuehleWhite.includes(arThreeInaRow_16[1]) && arMuehleWhite.includes(arThreeInaRow_16[2]) && muehle_pos_16 ? true : false;
-                }
-                if (arMuehleBlack.length >= 3) {
-                    var isMuehle_1_Black = arMuehleBlack.includes(arThreeInaRow_1[0]) && arMuehleBlack.includes(arThreeInaRow_1[1]) && arMuehleBlack.includes(arThreeInaRow_1[2]) && muehle_pos_1 ? true : false;
-                    var isMuehle_2_Black = arMuehleBlack.includes(arThreeInaRow_2[0]) && arMuehleBlack.includes(arThreeInaRow_2[1]) && arMuehleBlack.includes(arThreeInaRow_2[2]) && muehle_pos_2 ? true : false;
-                    var isMuehle_3_Black = arMuehleBlack.includes(arThreeInaRow_3[0]) && arMuehleBlack.includes(arThreeInaRow_3[1]) && arMuehleBlack.includes(arThreeInaRow_3[2]) && muehle_pos_3 ? true : false;
-                    var isMuehle_4_Black = arMuehleBlack.includes(arThreeInaRow_4[0]) && arMuehleBlack.includes(arThreeInaRow_4[1]) && arMuehleBlack.includes(arThreeInaRow_4[2]) && muehle_pos_4 ? true : false;
-                    var isMuehle_5_Black = arMuehleBlack.includes(arThreeInaRow_5[0]) && arMuehleBlack.includes(arThreeInaRow_5[1]) && arMuehleBlack.includes(arThreeInaRow_5[2]) && muehle_pos_5 ? true : false;
-                    var isMuehle_6_Black = arMuehleBlack.includes(arThreeInaRow_6[0]) && arMuehleBlack.includes(arThreeInaRow_6[1]) && arMuehleBlack.includes(arThreeInaRow_6[2]) && muehle_pos_6 ? true : false;
-                    var isMuehle_7_Black = arMuehleBlack.includes(arThreeInaRow_7[0]) && arMuehleBlack.includes(arThreeInaRow_7[1]) && arMuehleBlack.includes(arThreeInaRow_7[2]) && muehle_pos_7 ? true : false;
-                    var isMuehle_8_Black = arMuehleBlack.includes(arThreeInaRow_8[0]) && arMuehleBlack.includes(arThreeInaRow_8[1]) && arMuehleBlack.includes(arThreeInaRow_8[2]) && muehle_pos_8 ? true : false;
-                    var isMuehle_9_Black = arMuehleBlack.includes(arThreeInaRow_9[0]) && arMuehleBlack.includes(arThreeInaRow_9[1]) && arMuehleBlack.includes(arThreeInaRow_9[2]) && muehle_pos_9 ? true : false;
-                    var isMuehle_10_Black = arMuehleBlack.includes(arThreeInaRow_10[0]) && arMuehleBlack.includes(arThreeInaRow_10[1]) && arMuehleBlack.includes(arThreeInaRow_10[2]) && muehle_pos_10 ? true : false;
-                    var isMuehle_11_Black = arMuehleBlack.includes(arThreeInaRow_11[0]) && arMuehleBlack.includes(arThreeInaRow_11[1]) && arMuehleBlack.includes(arThreeInaRow_11[2]) && muehle_pos_11 ? true : false;
-                    var isMuehle_12_Black = arMuehleBlack.includes(arThreeInaRow_12[0]) && arMuehleBlack.includes(arThreeInaRow_12[1]) && arMuehleBlack.includes(arThreeInaRow_12[2]) && muehle_pos_12 ? true : false;
-                    var isMuehle_13_Black = arMuehleBlack.includes(arThreeInaRow_13[0]) && arMuehleBlack.includes(arThreeInaRow_13[1]) && arMuehleBlack.includes(arThreeInaRow_13[2]) && muehle_pos_13 ? true : false;
-                    var isMuehle_14_Black = arMuehleBlack.includes(arThreeInaRow_14[0]) && arMuehleBlack.includes(arThreeInaRow_14[1]) && arMuehleBlack.includes(arThreeInaRow_14[2]) && muehle_pos_14 ? true : false;
-                    var isMuehle_15_Black = arMuehleBlack.includes(arThreeInaRow_15[0]) && arMuehleBlack.includes(arThreeInaRow_15[1]) && arMuehleBlack.includes(arThreeInaRow_15[2]) && muehle_pos_15 ? true : false;
-                    var isMuehle_16_Black = arMuehleBlack.includes(arThreeInaRow_16[0]) && arMuehleBlack.includes(arThreeInaRow_16[1]) && arMuehleBlack.includes(arThreeInaRow_16[2]) && muehle_pos_16 ? true : false;
-                }
+            function muehle(stein, targetDiv) {
                 if (istAnDerReihe <= accessMode.setzen) {
+                    const arThreeInaRow_1 = ['div1', 'div2', 'div3'];//Äußerstes Quadrat oben(links nach rechts)
+                    const arThreeInaRow_2 = ['div1', 'div10', 'div22'];//Äußerstes Quadrat(oben nach unten)
+                    const arThreeInaRow_3 = ['div22', 'div23', 'div24'];//Äußerstes Quadrat unten(links nach rechts)
+                    const arThreeInaRow_4 = ['div24', 'div15', 'div3'];//Äußerstes Quadrat (unten nach oben)
+                    const arThreeInaRow_5 = ['div2', 'div5', 'div8'];//Äußerstes Quadrat mitte(nach unten)
+                    const arThreeInaRow_6 = ['div17', 'div20', 'div23'];//Äußerstes Quadrat mitte(nach oben)
+                    const arThreeInaRow_7 = ['div10', 'div11', 'div12'];//Äußerstes Quadrat mitte(nach rechts)
+                    const arThreeInaRow_8 = ['div13', 'div14', 'div15'];//Äußerstes Quadrat mitte(nach links)
+                    const arThreeInaRow_9 = ['div4', 'div5', 'div6'];//Inneres Quadrat oben(links nach rechts)
+                    const arThreeInaRow_10 = ['div4', 'div11', 'div19'];//Inneres Quadrat oben(oben nach unten)
+                    const arThreeInaRow_11 = ['div19', 'div20', 'div21'];//Inneres Quadrat unten(links nach rechts)
+                    const arThreeInaRow_12 = ['div21', 'div14', 'div6'];//Inneres Quadrat rechts(unten nach oben)             
+                    const arThreeInaRow_13 = ['div7', 'div8', 'div9'];//Innerstes Quadrat oben(links nach rechts)  
+                    const arThreeInaRow_14 = ['div7', 'div12', 'div16'];//Innerstes Quadrat oben(oben nach unten)  
+                    const arThreeInaRow_15 = ['div16', 'div17', 'div18'];//Innerstes Quadrat unten(links nach rechts) 
+                    const arThreeInaRow_16 = ['div18', 'div13', 'div9'];//Innerstes Quadrat unten(unten nach oben) 
+                    if (arMuehleWhite.length >= 3) {
+                        var isMuehle_1_White = arMuehleWhite.includes(arThreeInaRow_1[0]) && arMuehleWhite.includes(arThreeInaRow_1[1]) && arMuehleWhite.includes(arThreeInaRow_1[2]) && muehle_pos_1 ? true : false;
+                        var isMuehle_2_White = arMuehleWhite.includes(arThreeInaRow_2[0]) && arMuehleWhite.includes(arThreeInaRow_2[1]) && arMuehleWhite.includes(arThreeInaRow_2[2]) && muehle_pos_2 ? true : false;
+                        var isMuehle_3_White = arMuehleWhite.includes(arThreeInaRow_3[0]) && arMuehleWhite.includes(arThreeInaRow_3[1]) && arMuehleWhite.includes(arThreeInaRow_3[2]) && muehle_pos_3 ? true : false;
+                        var isMuehle_4_White = arMuehleWhite.includes(arThreeInaRow_4[0]) && arMuehleWhite.includes(arThreeInaRow_4[1]) && arMuehleWhite.includes(arThreeInaRow_4[2]) && muehle_pos_4 ? true : false;
+                        var isMuehle_5_White = arMuehleWhite.includes(arThreeInaRow_5[0]) && arMuehleWhite.includes(arThreeInaRow_5[1]) && arMuehleWhite.includes(arThreeInaRow_5[2]) && muehle_pos_5 ? true : false;
+                        var isMuehle_6_White = arMuehleWhite.includes(arThreeInaRow_6[0]) && arMuehleWhite.includes(arThreeInaRow_6[1]) && arMuehleWhite.includes(arThreeInaRow_6[2]) && muehle_pos_6 ? true : false;
+                        var isMuehle_7_White = arMuehleWhite.includes(arThreeInaRow_7[0]) && arMuehleWhite.includes(arThreeInaRow_7[1]) && arMuehleWhite.includes(arThreeInaRow_7[2]) && muehle_pos_7 ? true : false;
+                        var isMuehle_8_White = arMuehleWhite.includes(arThreeInaRow_8[0]) && arMuehleWhite.includes(arThreeInaRow_8[1]) && arMuehleWhite.includes(arThreeInaRow_8[2]) && muehle_pos_8 ? true : false;
+                        var isMuehle_9_White = arMuehleWhite.includes(arThreeInaRow_9[0]) && arMuehleWhite.includes(arThreeInaRow_9[1]) && arMuehleWhite.includes(arThreeInaRow_9[2]) && muehle_pos_9 ? true : false;
+                        var isMuehle_10_White = arMuehleWhite.includes(arThreeInaRow_10[0]) && arMuehleWhite.includes(arThreeInaRow_10[1]) && arMuehleWhite.includes(arThreeInaRow_10[2]) && muehle_pos_10 ? true : false;
+                        var isMuehle_11_White = arMuehleWhite.includes(arThreeInaRow_11[0]) && arMuehleWhite.includes(arThreeInaRow_11[1]) && arMuehleWhite.includes(arThreeInaRow_11[2]) && muehle_pos_11 ? true : false;
+                        var isMuehle_12_White = arMuehleWhite.includes(arThreeInaRow_12[0]) && arMuehleWhite.includes(arThreeInaRow_12[1]) && arMuehleWhite.includes(arThreeInaRow_12[2]) && muehle_pos_12 ? true : false;
+                        var isMuehle_13_White = arMuehleWhite.includes(arThreeInaRow_13[0]) && arMuehleWhite.includes(arThreeInaRow_13[1]) && arMuehleWhite.includes(arThreeInaRow_13[2]) && muehle_pos_13 ? true : false;
+                        var isMuehle_14_White = arMuehleWhite.includes(arThreeInaRow_14[0]) && arMuehleWhite.includes(arThreeInaRow_14[1]) && arMuehleWhite.includes(arThreeInaRow_14[2]) && muehle_pos_14 ? true : false;
+                        var isMuehle_15_White = arMuehleWhite.includes(arThreeInaRow_15[0]) && arMuehleWhite.includes(arThreeInaRow_15[1]) && arMuehleWhite.includes(arThreeInaRow_15[2]) && muehle_pos_15 ? true : false;
+                        var isMuehle_16_White = arMuehleWhite.includes(arThreeInaRow_16[0]) && arMuehleWhite.includes(arThreeInaRow_16[1]) && arMuehleWhite.includes(arThreeInaRow_16[2]) && muehle_pos_16 ? true : false;
+                    }
+                    if (arMuehleBlack.length >= 3) {
+                        var isMuehle_1_Black = arMuehleBlack.includes(arThreeInaRow_1[0]) && arMuehleBlack.includes(arThreeInaRow_1[1]) && arMuehleBlack.includes(arThreeInaRow_1[2]) && muehle_pos_1 ? true : false;
+                        var isMuehle_2_Black = arMuehleBlack.includes(arThreeInaRow_2[0]) && arMuehleBlack.includes(arThreeInaRow_2[1]) && arMuehleBlack.includes(arThreeInaRow_2[2]) && muehle_pos_2 ? true : false;
+                        var isMuehle_3_Black = arMuehleBlack.includes(arThreeInaRow_3[0]) && arMuehleBlack.includes(arThreeInaRow_3[1]) && arMuehleBlack.includes(arThreeInaRow_3[2]) && muehle_pos_3 ? true : false;
+                        var isMuehle_4_Black = arMuehleBlack.includes(arThreeInaRow_4[0]) && arMuehleBlack.includes(arThreeInaRow_4[1]) && arMuehleBlack.includes(arThreeInaRow_4[2]) && muehle_pos_4 ? true : false;
+                        var isMuehle_5_Black = arMuehleBlack.includes(arThreeInaRow_5[0]) && arMuehleBlack.includes(arThreeInaRow_5[1]) && arMuehleBlack.includes(arThreeInaRow_5[2]) && muehle_pos_5 ? true : false;
+                        var isMuehle_6_Black = arMuehleBlack.includes(arThreeInaRow_6[0]) && arMuehleBlack.includes(arThreeInaRow_6[1]) && arMuehleBlack.includes(arThreeInaRow_6[2]) && muehle_pos_6 ? true : false;
+                        var isMuehle_7_Black = arMuehleBlack.includes(arThreeInaRow_7[0]) && arMuehleBlack.includes(arThreeInaRow_7[1]) && arMuehleBlack.includes(arThreeInaRow_7[2]) && muehle_pos_7 ? true : false;
+                        var isMuehle_8_Black = arMuehleBlack.includes(arThreeInaRow_8[0]) && arMuehleBlack.includes(arThreeInaRow_8[1]) && arMuehleBlack.includes(arThreeInaRow_8[2]) && muehle_pos_8 ? true : false;
+                        var isMuehle_9_Black = arMuehleBlack.includes(arThreeInaRow_9[0]) && arMuehleBlack.includes(arThreeInaRow_9[1]) && arMuehleBlack.includes(arThreeInaRow_9[2]) && muehle_pos_9 ? true : false;
+                        var isMuehle_10_Black = arMuehleBlack.includes(arThreeInaRow_10[0]) && arMuehleBlack.includes(arThreeInaRow_10[1]) && arMuehleBlack.includes(arThreeInaRow_10[2]) && muehle_pos_10 ? true : false;
+                        var isMuehle_11_Black = arMuehleBlack.includes(arThreeInaRow_11[0]) && arMuehleBlack.includes(arThreeInaRow_11[1]) && arMuehleBlack.includes(arThreeInaRow_11[2]) && muehle_pos_11 ? true : false;
+                        var isMuehle_12_Black = arMuehleBlack.includes(arThreeInaRow_12[0]) && arMuehleBlack.includes(arThreeInaRow_12[1]) && arMuehleBlack.includes(arThreeInaRow_12[2]) && muehle_pos_12 ? true : false;
+                        var isMuehle_13_Black = arMuehleBlack.includes(arThreeInaRow_13[0]) && arMuehleBlack.includes(arThreeInaRow_13[1]) && arMuehleBlack.includes(arThreeInaRow_13[2]) && muehle_pos_13 ? true : false;
+                        var isMuehle_14_Black = arMuehleBlack.includes(arThreeInaRow_14[0]) && arMuehleBlack.includes(arThreeInaRow_14[1]) && arMuehleBlack.includes(arThreeInaRow_14[2]) && muehle_pos_14 ? true : false;
+                        var isMuehle_15_Black = arMuehleBlack.includes(arThreeInaRow_15[0]) && arMuehleBlack.includes(arThreeInaRow_15[1]) && arMuehleBlack.includes(arThreeInaRow_15[2]) && muehle_pos_15 ? true : false;
+                        var isMuehle_16_Black = arMuehleBlack.includes(arThreeInaRow_16[0]) && arMuehleBlack.includes(arThreeInaRow_16[1]) && arMuehleBlack.includes(arThreeInaRow_16[2]) && muehle_pos_16 ? true : false;
+                    }
                     if (isMuehle_1_White || isMuehle_1_Black) {
                         for (var i = 0; i < arHaveMoved.length; i++) {
                             if (arHaveMoved[i] === arThreeInaRow_1[0] || arHaveMoved[i] === arThreeInaRow_1[1] || arHaveMoved[i] === arThreeInaRow_1[2]) {
@@ -370,11 +379,11 @@
                         return true;
                     }
                 } else if (istAnDerReihe >= accessMode.ziehen) {
-                    //vorm Ziehen alle Arrays zurück setzen
-                    arMuehleWhite.splice(0, arMuehleWhite.length);
-                    arMuehleBlack.splice(0, arMuehleBlack.length);
-                    arHaveMoved.splice(0, arHaveMoved.length);
-                    alert("Zugmodus aktiviert");
+                    for (var i = 0; i < arSteinIsPartOfMuehle.length; i++) {
+                        if (stein == arSteinIsPartOfMuehle[i] && targetDiv == arFeldIsPartOfMuehle[i]) {
+                            alert("Mühle! Entfernen Sie einen Stein");
+                        }
+                    }
                 }
                 return false;
             }
@@ -475,7 +484,6 @@
                         }
                     });
                 } else if (istAnDerReihe >= accessMode.ziehen) {
-                    alert("Zugmodus aktivert");
                 }
                 return false;
             }
